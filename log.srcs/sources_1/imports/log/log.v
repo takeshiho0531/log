@@ -41,26 +41,6 @@ module log #(
         logE = (logE_shifted >>> ((-1)*LSB_O))[O_BW-1:0];
     endfunction
 
-    function signed [O_BW*64-1:0] format_output;
-        input signed [I_BW*64-1:0] input_bundle;
-        integer i;
-        integer j;
-        integer k;
-        reg signed [I_BW-1:0] input_partial;
-        reg signed [O_BW-1:0] output_partial;
-
-        for (i=0; i<64; i=i+1) begin
-            for (j=0; j<I_BW; j=j+1) begin
-                input_partial[j] = input_bundle[i*I_BW+j];
-            end
-            // output_partial = logb2(input_partial)[O_BW-1:0];
-            output_partial = logE(input_partial);
-            for (k=0; k<O_BW; k=k+1) begin
-                format_output[i*O_BW+k] = output_partial[k];
-            end
-        end
-    endfunction
-
-    assign data_o = format_output(data_i);
+    assign data_o = logE(data_i);
 
 endmodule
